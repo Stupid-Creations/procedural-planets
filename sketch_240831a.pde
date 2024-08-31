@@ -2,23 +2,62 @@ void setup(){
   size(400,400);
 }
 
+PVector center = new PVector(200,200);
+
+float offsetx = 0;
+float offsety = 0;
+
 void draw(){
-    translate(mouseX,mouseY);
-
-  drawCircle(10,20,20);
-}
-
-void drawCircle(int r, int xs, int ys) {
-  int steps = 360;
-  float angleStep = TWO_PI / steps; // Angle between each point in radians
-
-  for (int i = 0; i < steps; i+= 10) {
-    float x = round((r * cos(i * angleStep)+xs)*10) ;// Calculate the x position
-    float y = round((r * sin(i * angleStep)+ys)*10); // Calculate the y position
-    pixel a = new pixel(int(x), int(y),20); // Draw the point at the calculated position
-    a.render();
+  noStroke();
+  for(int i = 0; i < 40;i++){
+    for(int j = 0; j < 40; j++){
+      if(center.dist(new PVector(i*10,j*10))< 196){
+      pixel a = new pixel(i*10,j*10,10);
+      a.setcolour(getcolor(noise(i*0.06+offsetx,j*0.06+offsety)));
+      a.render();
+    }
+    }
   }
 }
+
+float changer = 0.01;
+void keyPressed(){
+  if(key == 'd'){
+    offsetx += changer;
+  }
+    if(key == 'a'){
+    offsetx -= changer;
+  }
+    if(key == 's'){
+    offsety += changer;
+  }
+    if(key == 'w'){
+    offsety -= changer;
+  }
+  if(offsety >= 3.6){
+    changer *= -1;
+  }
+   if(offsetx >= 3.6){
+     changer *= -1;
+   }
+     if(offsety <= 0){
+    changer *= -1;
+  }
+   if(offsetx <= 0){
+     changer *= -1;
+   }
+}
+
+
+color getcolor(float greyscale){
+  if(greyscale > 0.57){
+    return color(25,125,75);
+  }else{ if(greyscale > 0.3){
+    return color(25,25,200);
+  }else
+  return color(25,25,125);}
+}
+
 class pixel{
   int x;
   int y;
@@ -35,37 +74,5 @@ class pixel{
   void render(){
     fill(colour);
     square(x,y,size);
-  }
-}
-
-ArrayList<pixel> circles(int x, int y, int radius){
-  ArrayList<pixel> circle = new ArrayList<pixel>();
-  int xs = 0;
-  int ys = radius;
-  int d = 3-2*radius;
-
-  return circle;
-}
-
-void draw_circle(int r,int xs, int ys){
-  int x = 0+xs;
-  int y = r+ys;
-  int d = 3-2*r;
-  while (x <= y){
-    plot_points(x,y);
-    if (d < 0){
-      d += 4*x+6;
-    }else{
-      d+= 4*(x-y)+10;
-      y-=1;
-    }
-    x++;
-  }
-}
-void plot_points(int x ,int y){
-  float[][] points = {{x,y},{-x,y},{-x,-y},{x,-y},{y,x},{-y,x},{-y,-x},{y,-x}};
-  for(int i = 0; i < points.length; i++){
-    println(points[i][0],points[i][1]);
-    point(points[i][0],points[i][1]);
   }
 }
